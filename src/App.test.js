@@ -1,12 +1,18 @@
 import React from 'react';
+
 import App from './App';
+import Header from './components/Header/Header'
 
 import {shallow} from 'enzyme';
 
 describe('<App />', () => {
-    it('should render without crashing', () => {
-        const wrapper = shallow(<App/>);
-        const projectTitle = <h1>React Loan App</h1>;
-        expect(wrapper).toContainReact(projectTitle);
+    let wrapper;
+
+    beforeEach(() => {
+        wrapper = shallow(<App/>);
     });
+
+    it('should contain only one Header component', () => {
+        expect(wrapper).toContainExactlyOneMatchingElement('Header');
+    })
 });
