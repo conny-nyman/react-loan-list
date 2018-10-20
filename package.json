@@ -3,18 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
+    "jest-enzyme": "^7.0.0",
+    "mdbreact": "^4.8.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-scripts": "2.0.5",
+    "react-test-renderer": "^16.5.2",
     "redux": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm:sass-build\" \"npm:react-scripts\" \"npm:sass-watch\"",
+    "react-scripts": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sass-watch": "node-sass --watch src/styles/scss/App.scss src/styles/css/App.css",
+    "sass-build": "node-sass src/styles/scss/App.scss src/styles/css/App.css"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -24,5 +32,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "node-sass": "^4.9.4"
+  }
 }
