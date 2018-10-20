@@ -11,11 +11,13 @@
     "redux": "^4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm:sass-build\" \"npm:react-scripts\" \"npm:sass-watch\"",
+    "react-scripts": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "node-sass": "node-sass --watch src/styles/scss/App.scss src/styles/css/App.css"
+    "sass-watch": "node-sass --watch src/styles/scss/App.scss src/styles/css/App.css",
+    "sass-build": "node-sass src/styles/scss/App.scss src/styles/css/App.css"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,6 +29,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "concurrently": "^4.0.1",
     "node-sass": "^4.9.4"
   }
 }
