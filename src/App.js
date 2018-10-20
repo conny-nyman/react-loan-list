@@ -5,6 +5,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <h1>React Loan App</h1>
       </div>
     );
   }
