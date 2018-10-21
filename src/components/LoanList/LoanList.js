@@ -62,16 +62,18 @@ class LoanList extends Component {
     };
 
     render() {
-        let items = <h4 className="bg-light p-3">The loan list is empty!</h4>;
+        let items = <h4 className="bg-light p-3 mt-3">The loan list is empty!</h4>;
 
         if (this.state.items.length > 0) {
             items = this.state.items.map((item, index) =>
-                <div key={index} className="col-4" onClick={() => this.onDeleteItemHandler(item.id)}>
-                    <div className="col-12 m-3 bg-light p-3 cursor-pointer hover-red">
-                        <h4><strong>Holder:</strong> {item[LoanList.HOLDER]}</h4>
-                        <h4><strong>Description:</strong> {item[LoanList.DESCRIPTION]}</h4>
-                        <h4><strong>Amount:</strong> {item[LoanList.AMOUNT]}</h4>
-                        <h4><strong>Owner:</strong> {item[LoanList.OWNER]}</h4>
+                <div key={index} className="col-sm-12 col-md-6 col-lg-4 p-0 mt-3" onClick={() => this.onDeleteItemHandler(item.id)}>
+                    <div>
+                        <div className="bg-light p-3 m-1 cursor-pointer hover-red">
+                            <h4><strong>Holder:</strong> {item[LoanList.HOLDER]}</h4>
+                            <h4><strong>Description:</strong> {item[LoanList.DESCRIPTION]}</h4>
+                            <h4><strong>Amount:</strong> {item[LoanList.AMOUNT]}</h4>
+                            <h4><strong>Owner:</strong> {item[LoanList.OWNER]}</h4>
+                        </div>
                     </div>
                 </div>
             );
