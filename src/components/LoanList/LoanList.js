@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {updateObject} from "../../utils/utility";
 import AddLoan from "./AddLoan/AddLoan";
+import LoanItem from "./LoanItem/LoanItem";
 
 class LoanList extends Component {
     static HOLDER = 'holder';
@@ -66,16 +67,14 @@ class LoanList extends Component {
 
         if (this.state.items.length > 0) {
             items = this.state.items.map((item, index) =>
-                <div key={index} className="col-sm-12 col-md-6 col-lg-4 p-0 mt-3" onClick={() => this.onDeleteItemHandler(item.id)}>
-                    <div>
-                        <div className="bg-light p-3 m-1 cursor-pointer hover-red">
-                            <h4><strong>Holder:</strong> {item[LoanList.HOLDER]}</h4>
-                            <h4><strong>Description:</strong> {item[LoanList.DESCRIPTION]}</h4>
-                            <h4><strong>Amount:</strong> {item[LoanList.AMOUNT]}</h4>
-                            <h4><strong>Owner:</strong> {item[LoanList.OWNER]}</h4>
-                        </div>
-                    </div>
-                </div>
+                <LoanItem
+                    key={index}
+                    clicked={() => this.onDeleteItemHandler(item.id)}
+                    holder={item[LoanList.HOLDER]}
+                    description={item[LoanList.DESCRIPTION]}
+                    amount={item[LoanList.AMOUNT]}
+                    owner={item[LoanList.OWNER]}
+                />
             );
         }
 
