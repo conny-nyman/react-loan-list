@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sass-watch": "node-sass --watch src/styles/scss/App.scss src/styles/css/App.css",
+    "sass-watch": "node-sass -rw src/styles/scss/App.scss src/styles/css/App.css",
     "sass-build": "node-sass src/styles/scss/App.scss src/styles/css/App.css"
   },
   "eslintConfig": {

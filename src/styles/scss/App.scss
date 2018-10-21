@@ -1,4 +1,8 @@
+@import "generic/generic";
 @import './components/Header';
+@import './components/LoanList';
+@import './components/AddLoan';
+@import './components/LoanItem';
 
 .App {
 
