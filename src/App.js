@@ -25,13 +25,6 @@ class App extends Component {
         return (
             <ApolloProvider client={client}>
                 <div className="App container-fluid">
-                    <hr/>
-                    id: {this.state.user.id}
-                    <hr/>
-                    firstname: {this.state.user.firstName}
-                    <hr/>
-                    surname: {this.state.user.surname}
-                    <hr/>
                     <Header title="React Loan App" cssClasses="py-5 bg-light"/>
                     {this.state.isAuthenticated ? <LoanList/> : <Login onLogin={(user) => this.onLoginHandler(user)}/>}
                 </div>

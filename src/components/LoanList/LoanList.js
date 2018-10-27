@@ -28,13 +28,12 @@ class LoanList extends Component {
         ));
     };
 
-    addItem = (e) => {
-        e.preventDefault();
+    addItem = (loan) => {
         this.props.createLoanMutation({
             variables: {
-                Sum: parseFloat(this.state.formData[LoanList.AMOUNT]),
-                DateOfLoan: this.state.formData[LoanList.DATE],
-                LenderID: this.state.formData[LoanList.LENDER]
+                Sum: parseFloat(loan[LoanList.AMOUNT]),
+                DateOfLoan: loan[LoanList.DATE],
+                LenderID: loan[LoanList.LENDER]
             }
         });
     };
