@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import {updateObject} from "../../utils/utility";
 import AddLoan from "./AddLoan/AddLoan";
 import LoanItem from "./LoanItem/LoanItem";
+import {graphql, compose} from 'react-apollo';
+import {getLoansQuery, createLoanMutation} from '../../queries/queries';
 
 class LoanList extends Component {
-    static HOLDER = 'holder';
-    static DESCRIPTION = 'description';
+    static BORROWER = 'borrower';
+    static DATE = 'date';
     static AMOUNT = 'amount';
-    static OWNER = 'owner';
+    static LENDER = 'lender';
 
     state = {
         formData: {},
@@ -26,74 +28,65 @@ class LoanList extends Component {
         ));
     };
 
-    onDeleteItemHandler = (id) => {
-        this.setState({
-            ...this.state,
-            items: this.state.items.filter(item => item.id !== id)
-        })
-    };
-
     addItem = (e) => {
-        const updatedState = updateObject(
-            this.state,
-            {
-                items: this.state.items.concat(this.getLoanItem(this.state))
-            }
-        );
-
-        this.setState(updatedState);
         e.preventDefault();
+        this.props.createLoanMutation({
+            variables: {
+                Sum: parseFloat(this.state.formData[LoanList.AMOUNT]),
+                DateOfLoan: this.state.formData[LoanList.DATE],
+                LenderID: this.state.formData[LoanList.LENDER]
+            }
+        });
     };
 
-    getLoanItem = (state = this.state) => {
-        const formData = {};
+    displayLoans() {
+        const query = this.props.getLoansQuery;
 
-        for (let inputKey in this.state.formData) {
-            formData[inputKey] = this.state.formData[inputKey];
+        if (query.loading) {
+            return (<div className="col-12 text-center">Loading loans...</div>);
+        } else {
+            if (query.readLoans) {
+                return query.readLoans.map((item, index) =>
+                    <LoanItem
+                        key={index}
+                        holder={`${item.Borrower.FirstName} ${item.Borrower.Surname}`}
+                        date={item.DateOfLoan}
+                        amount={item.Sum}
+                        owner={`${item.Lender.FirstName} ${item.Lender.Surname}`}
+                    />
+                )
+            }
+            return <div className="col-12 text-center">Could not fetch loans, are you authenticated?</div>;
         }
-
-        formData.id = this.getRandomId();
-
-        return formData;
-    };
-
-    getRandomId = () => {
-        const rndNum = Math.floor(Math.random() * 101);
-        return `${rndNum}-${new Date()}`;
-    };
+    }
 
     render() {
-        let items = <h4 className="bg-light p-3 mt-3">The loan list is empty!</h4>;
-
-        if (this.state.items.length > 0) {
-            items = this.state.items.map((item, index) =>
-                <LoanItem
-                    key={index}
-                    clicked={() => this.onDeleteItemHandler(item.id)}
-                    holder={item[LoanList.HOLDER]}
-                    description={item[LoanList.DESCRIPTION]}
-                    amount={item[LoanList.AMOUNT]}
-                    owner={item[LoanList.OWNER]}
-                />
-            );
-        }
-
         return (
-            <div className="LoanList container row py-3 mx-auto">
-                <div className="col-12 text-center">
-                    <AddLoan
-                        onSubmit={this.addItem}
-                        holderId={LoanList.HOLDER}
-                        descriptionId={LoanList.DESCRIPTION}
-                        amountId={LoanList.AMOUNT}
-                        ownerId={LoanList.OWNER}
-                        changed={(event) => this.onInputChangedHandler(event)}
-                    />
+            <div>
+                <div className="LoanList container row py-3 mx-auto">
+                    <div className="col-12 text-center">
+                        <AddLoan
+                            onSubmit={this.addItem}
+                            holderId={LoanList.BORROWER}
+                            descriptionId={LoanList.DATE}
+                            amountId={LoanList.AMOUNT}
+                            ownerId={LoanList.LENDER}
+                            changed={(event) => this.onInputChangedHandler(event)}
+                        />
+                    </div>
                 </div>
-                {items}
+                <hr/>
+                <h3 className="text-center">Existing</h3>
+                <hr/>
+                <div className="container row mx-auto">
+                    {this.displayLoans()}
+                </div>
             </div>
         );
     }
 }
 
-export default LoanList;
+export default compose(
+    graphql(getLoansQuery, {name: 'getLoansQuery'}),
+    graphql(createLoanMutation, {name: 'createLoanMutation'})
+)(LoanList);
