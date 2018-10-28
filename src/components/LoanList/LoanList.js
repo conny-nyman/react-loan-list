@@ -3,7 +3,7 @@ import {updateObject} from "../../utils/utility";
 import AddLoan from "./AddLoan/AddLoan";
 import LoanItem from "./LoanItem/LoanItem";
 import {graphql, compose} from 'react-apollo';
-import {getLoansQuery, createLoanMutation} from '../../queries/queries';
+import {getLoansQuery, createLoanMutation, getHouseMembersQuery} from '../../queries/queries';
 
 class LoanList extends Component {
     static BORROWER = 'borrower';
@@ -12,21 +12,29 @@ class LoanList extends Component {
     static LENDER = 'lender';
 
     state = {
-        formData: {},
-        items: []
+        items: [],
+        lenders: []
     };
 
-    onInputChangedHandler = (e) => {
-        let formData = {...this.state.formData};
-        formData[e.target.id] = e.target.value;
+    componentWillReceiveProps(newProps) {
+        this.addHouseMembersFromQueryResult(newProps);
+    }
 
-        this.setState(updateObject(
-            this.state,
-            {
-                formData: formData
+    addHouseMembersFromQueryResult(newProps) {
+        if (this.state.lenders && this.state.lenders.length === 0) {
+            if (!newProps.getHouseMembersQuery.loading) {
+                this.addHouseMembersToLendersArray(newProps.getHouseMembersQuery.readHouseMembers);
             }
-        ));
-    };
+        }
+    }
+
+    addHouseMembersToLendersArray(members) {
+        const lenders = [];
+        members.map((member) => {
+            lenders.push({value: member.ID, label: `${member.FirstName} ${member.Surname}`})
+        });
+        this.setState({...this.state, lenders: lenders});
+    }
 
     addItem = (loan) => {
         this.props.createLoanMutation({
@@ -66,11 +74,7 @@ class LoanList extends Component {
                     <div className="col-12 text-center">
                         <AddLoan
                             onSubmit={this.addItem}
-                            holderId={LoanList.BORROWER}
-                            descriptionId={LoanList.DATE}
-                            amountId={LoanList.AMOUNT}
-                            ownerId={LoanList.LENDER}
-                            changed={(event) => this.onInputChangedHandler(event)}
+                            lenders={this.state.lenders}
                         />
                     </div>
                 </div>
@@ -87,5 +91,6 @@ class LoanList extends Component {
 
 export default compose(
     graphql(getLoansQuery, {name: 'getLoansQuery'}),
+    graphql(getHouseMembersQuery, {name: 'getHouseMembersQuery'}),
     graphql(createLoanMutation, {name: 'createLoanMutation'})
 )(LoanList);

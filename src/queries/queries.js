@@ -19,6 +19,17 @@ const getLoansQuery = gql`
         }
     }
 `;
+
+const getHouseMembersQuery = gql`
+    {
+        readHouseMembers {
+            ID
+            FirstName
+            Surname
+        }
+    }
+`;
+
 // "2018-10-24 01:03:00"
 const createLoanMutation = gql`
     mutation($Sum: Float!, $DateOfLoan: String!, $LenderID: ID!) {
@@ -41,4 +52,4 @@ const createTokenMutation = gql`
     }
 `;
 
-export {getLoansQuery, createLoanMutation, createTokenMutation}
+export {getLoansQuery, getHouseMembersQuery, createLoanMutation, createTokenMutation}

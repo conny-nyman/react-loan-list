@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import MDFormInput from "../../UI/MDFormInput/MDFormInput";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
 import {updateObject} from "../../../utils/utility";
 import {getCurrentUser} from "../../../utils/permissionUtils";
 
@@ -28,6 +30,12 @@ class AddLoan extends Component {
         this.setState(updateObject(this.state, {loan: loan}))
     };
 
+    onLenderChangedHandler = (option) => {
+        let loan = {...this.state.loan};
+        loan.lender = option.value;
+        this.setState(updateObject(this.state, {loan: loan}));
+    }
+
     onSubmitHandler = (e) => {
         e.preventDefault();
         this.props.onSubmit(this.state.loan);
@@ -42,15 +50,13 @@ class AddLoan extends Component {
                             <MDFormInput type="text" id="borrower" value={`${this.state.user.firstName} ${this.state.user.surname}`} disabled={true}/>
                         </div>
                         <div className="col-md-3">
-                            <DayPickerInput placeholder="date" onDayChange={this.onDayChangedHandler}/>
+                            <DayPickerInput placeholder="Date" onDayChange={this.onDayChangedHandler}/>
                         </div>
                         <div className="col-md-3">
-                            <MDFormInput type="text" id={this.props.amountId} placeholder={this.props.amountId} changed={this.onInputChangedHandler}/>
-                            {this.state.loan.amount}
+                            <MDFormInput type="number" id="amount" placeholder="Amount" changed={this.onInputChangedHandler}/>
                         </div>
                         <div className="col-md-3">
-                            <MDFormInput required={true} type="text" id={this.props.ownerId} placeholder={this.props.ownerId} changed={this.onInputChangedHandler}/>
-                            {this.state.loan.lender}
+                            <Dropdown options={this.props.lenders} value={this.state.loan.lender} onChange={this.onLenderChangedHandler} placeholder="Lender" />
                         </div>
                     </div>
                     <button type="submit" className="btn btn-primary btn-md">Add</button>
