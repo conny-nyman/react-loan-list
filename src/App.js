@@ -6,6 +6,7 @@ import LoanList from './components/LoanList/LoanList';
 import Login from './components/Login/Login';
 import './styles/css/App.css';
 import {getCurrentUser, isUserAuthenticated} from "./utils/permissionUtils";
+import {ToastContainer, Flip} from "react-toastify";
 
 class App extends Component {
 
@@ -28,6 +29,7 @@ class App extends Component {
                     <Header title="React Loan App" cssClasses="py-5 bg-light"/>
                     {this.state.isAuthenticated ? <LoanList/> : <Login onLogin={(user) => this.onLoginHandler(user)}/>}
                 </div>
+                <ToastContainer transition={Flip} autoClose={3000}/>
             </ApolloProvider>
         );
     }

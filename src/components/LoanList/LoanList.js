@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {updateObject} from "../../utils/utility";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AddLoan from "./AddLoan/AddLoan";
 import LoanItem from "./LoanItem/LoanItem";
 import {graphql, compose} from 'react-apollo';
 import {getLoansQuery, createLoanMutation, getHouseMembersQuery} from '../../queries/queries';
 
 class LoanList extends Component {
-    static BORROWER = 'borrower';
     static DATE = 'date';
     static AMOUNT = 'amount';
     static LENDER = 'lender';
@@ -22,18 +22,21 @@ class LoanList extends Component {
 
     addHouseMembersFromQueryResult(newProps) {
         if (this.state.lenders && this.state.lenders.length === 0) {
-            if (!newProps.getHouseMembersQuery.loading) {
-                this.addHouseMembersToLendersArray(newProps.getHouseMembersQuery.readHouseMembers);
+            const query = newProps.getHouseMembersQuery;
+            if (!query.loading) {
+                this.pushHouseMembersToLendersArray(query.readHouseMembers);
             }
         }
     }
 
-    addHouseMembersToLendersArray(members) {
-        const lenders = [];
-        members.map((member) => {
-            lenders.push({value: member.ID, label: `${member.FirstName} ${member.Surname}`})
-        });
-        this.setState({...this.state, lenders: lenders});
+    pushHouseMembersToLendersArray(members) {
+        if (members) {
+            const lenders = [];
+            members.map((member) => {
+                lenders.push({value: member.ID, label: `${member.FirstName} ${member.Surname}`})
+            });
+            this.setState({...this.state, lenders: lenders});
+        }
     }
 
     addItem = (loan) => {
@@ -43,7 +46,11 @@ class LoanList extends Component {
                 DateOfLoan: loan[LoanList.DATE],
                 LenderID: loan[LoanList.LENDER]
             }
-        });
+        }).then(() => {
+            toast.success('Loan added!');
+        }).catch((err) => {
+            toast.error(err.message);
+        })
     };
 
     displayLoans() {
@@ -62,6 +69,14 @@ class LoanList extends Component {
                         owner={`${item.Lender.FirstName} ${item.Lender.Surname}`}
                     />
                 )
+            }
+            if (query.error) {
+                // query error
+                toast.error(query.error.message);
+            }
+            else if (query.errors) {
+                // validation error
+                query.errors.map(error => toast.error(error.message));
             }
             return <div className="col-12 text-center">Could not fetch loans, are you authenticated?</div>;
         }
