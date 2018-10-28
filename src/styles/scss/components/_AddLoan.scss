@@ -1,9 +1,16 @@
 .AddLoan {
   .DayPickerInput {
+    width: 100%;
     input {
+      width: 100%;
+      margin: 0 0 0.5rem 0;
+      border-radius: 0;
+      background-image: none;
+      background-color: transparent;
+      height: auto;
       border: none;
       border-bottom: solid #ced4da 1px;
-      padding: 0.3rem 0 0.55rem 0;
+      padding: 0.8rem 0 0.55rem 0;
     }
   }
 }
