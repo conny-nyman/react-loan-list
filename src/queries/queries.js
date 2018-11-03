@@ -1,6 +1,6 @@
 import {gql} from 'apollo-boost';
 
-const getLoansQuery = gql`
+export const getLoansQuery = gql`
     {
         readLoans {
             ID
@@ -20,7 +20,7 @@ const getLoansQuery = gql`
     }
 `;
 
-const getHouseMembersQuery = gql`
+export const getHouseMembersQuery = gql`
     {
         readHouseMembers {
             ID
@@ -31,7 +31,7 @@ const getHouseMembersQuery = gql`
 `;
 
 // "2018-10-24 01:03:00"
-const createLoanMutation = gql`
+export const createLoanMutation = gql`
     mutation($Sum: Float!, $DateOfLoan: String!, $LenderID: ID!) {
       createLoan(Input: {Sum: $Sum, DateOfLoan: $DateOfLoan, LenderID: $LenderID}) {
         ID
@@ -41,7 +41,7 @@ const createLoanMutation = gql`
     }
 `;
 
-const createTokenMutation = gql`
+export const createTokenMutation = gql`
     mutation($Email: String!, $Password: String!) {
       createToken(Email: $Email, Password: $Password) {
         Token,
@@ -52,4 +52,10 @@ const createTokenMutation = gql`
     }
 `;
 
-export {getLoansQuery, getHouseMembersQuery, createLoanMutation, createTokenMutation}
+export const deleteLoanMutation = gql`
+    mutation($IDs: ID!) {
+        deleteLoan(IDs: [$IDs]) {
+            ID
+        }
+    }
+`;

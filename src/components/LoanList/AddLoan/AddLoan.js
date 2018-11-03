@@ -59,7 +59,7 @@ class AddLoan extends Component {
                             <Dropdown options={this.props.lenders} value={this.state.loan.lender} onChange={this.onLenderChangedHandler} placeholder="Lender" />
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-primary btn-md">Add</button>
+                    <button type="submit" className="btn btn-primary btn-md">Save loan</button>
                 </form>
             </div>
         );

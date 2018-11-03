@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddLoan from "./AddLoan/AddLoan";
 import LoanItem from "./LoanItem/LoanItem";
 import {graphql, compose} from 'react-apollo';
-import {getLoansQuery, createLoanMutation, getHouseMembersQuery} from '../../queries/queries';
+import * as queries from '../../queries/queries';
 
 class LoanList extends Component {
     static DATE = 'date';
@@ -45,9 +45,28 @@ class LoanList extends Component {
                 Sum: parseFloat(loan[LoanList.AMOUNT]),
                 DateOfLoan: loan[LoanList.DATE],
                 LenderID: loan[LoanList.LENDER]
-            }
+            },
+            refetchQueries: [{
+                query: queries.getLoansQuery
+            }]
         }).then(() => {
             toast.success('Loan added!');
+        }).catch((err) => {
+            toast.error(err.message);
+        })
+    };
+
+    deleteLoan = (id) => {
+        this.props.deleteLoanMutation({
+            variables: {
+                IDs: id
+            },
+            refetchQueries: [{
+                query: queries.getLoansQuery
+            }]
+        }).then((res) => {
+            console.log('res', res);
+            toast.success('Loan deleted!');
         }).catch((err) => {
             toast.error(err.message);
         })
@@ -62,11 +81,22 @@ class LoanList extends Component {
             if (query.readLoans) {
                 return query.readLoans.map((item, index) =>
                     <LoanItem
-                        key={index}
+                        key={item.ID}
                         holder={`${item.Borrower.FirstName} ${item.Borrower.Surname}`}
                         date={item.DateOfLoan}
                         amount={item.Sum}
                         owner={`${item.Lender.FirstName} ${item.Lender.Surname}`}
+                        clicked={(id) => {
+                            if (window.confirm(`Are you sure you want to delete this item?\n
+                            ID: ${item.ID}\n
+                            Date: ${item.DateOfLoan}\n
+                            Amount: ${item.Sum}\n
+                            Borrower: ${item.Borrower.FirstName} ${item.Borrower.Surname}\n
+                            Lender: ${item.Lender.FirstName} ${item.Lender.Surname}\n`
+                            )) {
+                                return this.deleteLoan(item.ID)
+                            }
+                        }}
                     />
                 )
             }
@@ -105,7 +135,8 @@ class LoanList extends Component {
 }
 
 export default compose(
-    graphql(getLoansQuery, {name: 'getLoansQuery'}),
-    graphql(getHouseMembersQuery, {name: 'getHouseMembersQuery'}),
-    graphql(createLoanMutation, {name: 'createLoanMutation'})
+    graphql(queries.getLoansQuery, {name: 'getLoansQuery'}),
+    graphql(queries.getHouseMembersQuery, {name: 'getHouseMembersQuery'}),
+    graphql(queries.createLoanMutation, {name: 'createLoanMutation'}),
+    graphql(queries.deleteLoanMutation, {name: 'deleteLoanMutation'})
 )(LoanList);
