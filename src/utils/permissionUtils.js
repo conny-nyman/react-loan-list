@@ -16,3 +16,7 @@ export const getCurrentUser = () => {
     }
     return null;
 };
+
+export const deleteTokenFromLocalStorage = () => {
+    return localStorage.removeItem(utilConstants.MEMBER_TOKEN);
+};

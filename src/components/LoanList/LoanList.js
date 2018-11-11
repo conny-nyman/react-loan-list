@@ -5,6 +5,7 @@ import AddLoan from "./AddLoan/AddLoan";
 import LoanItem from "./LoanItem/LoanItem";
 import {graphql, compose} from 'react-apollo';
 import * as queries from '../../queries/queries';
+import {deleteTokenFromLocalStorage} from "../../utils/permissionUtils";
 
 class LoanList extends Component {
     static DATE = 'date';
@@ -103,10 +104,12 @@ class LoanList extends Component {
             if (query.error) {
                 // query error
                 toast.error(query.error.message);
+                deleteTokenFromLocalStorage();
             }
             else if (query.errors) {
                 // validation error
                 query.errors.map(error => toast.error(error.message));
+                deleteTokenFromLocalStorage();
             }
             return <div className="col-12 text-center">Could not fetch loans, are you authenticated?</div>;
         }

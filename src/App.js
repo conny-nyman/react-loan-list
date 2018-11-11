@@ -26,7 +26,7 @@ class App extends Component {
         return (
             <ApolloProvider client={client}>
                 <div className="App container-fluid">
-                    <Header title="React Loan App" cssClasses="py-5 bg-light"/>
+                    <Header title="React Loan App" cssClasses="App-title py-5 bg-light"/>
                     {this.state.isAuthenticated ? <LoanList/> : <Login onLogin={(user) => this.onLoginHandler(user)}/>}
                 </div>
                 <ToastContainer transition={Flip} autoClose={3000}/>
